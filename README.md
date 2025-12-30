@@ -39,7 +39,7 @@ I suspected the issue wasn't password *complexity*, but password *age*. I querie
 **Finding:** `MinPasswordAge` was set to `1.00:00:00` (1 Day). Because the account password had been set less than 24 hours ago, Active Directory was blocking the rotation to prevent "history churning."
 
 **PowerShell Verification**
-<img width="973" alt="Screenshot 2025-12-30 135750" src="https://github.com/user-attachments/assets/78393e83-9b81-4234-8c85-2e3d5f3032b4" />
+<img width="531" height="292" alt="Screenshot 2025-12-30 135806" src="https://github.com/user-attachments/assets/e51aefe5-1474-492c-9bda-0cde78b8daa3" />
 
 *> **Figure 3:** The "Smoking Gun." `MinPasswordAge` set to 1 day created a "denial of service" for the automation engine.*
 
@@ -49,7 +49,7 @@ In a PAM environment, the automation engine must have the authority to change pa
 **Action:** I accessed the Default Domain Policy GPO and modified **Minimum Password Age** to **0 days**.
 
 **GPO Modification**
-<img width="973" alt="Screenshot 2025-12-30 135750" src="https://github.com/user-attachments/assets/9d01b2a5-4f4a-4e2b-b5d1-6c2e7f8a9b3c" />
+<img width="508" height="272" alt="Screenshot 2025-12-30 140236" src="https://github.com/user-attachments/assets/6cc90f09-6e18-4422-a102-2764ebe4bc1d" />
 
 *> **Figure 4:** Adjusting the Group Policy Object (GPO) to remove the time-based restriction.*
 
@@ -57,7 +57,8 @@ In a PAM environment, the automation engine must have the authority to change pa
 I forced an immediate policy update on the Domain Controller to apply the changes without a reboot.
 
 **GPUpdate Command**
-<img width="973" alt="Screenshot 2025-12-30 135750" src="https://github.com/user-attachments/assets/1a2b3c4d-5e6f-7g8h-9i0j-k1l2m3n4o5p6" />
+<img width="380" height="107" alt="Screenshot 2025-12-30 140334" src="https://github.com/user-attachments/assets/aa21a644-25c4-48ae-b9a2-86ea459d7d52" />
+
 
 *> **Figure 5:** Executing `gpupdate /force` to ensure the new rules took effect immediately.*
 
@@ -70,7 +71,7 @@ With the policy conflict resolved, I re-triggered the rotation.
 The `pm.log` confirmed that the CPM successfully connected to the target, changed the password, and verified the new credential on **Try #0**.
 
 **Successful Rotation Log**
-<img width="973" alt="Screenshot 2025-12-30 135750" src="https://github.com/user-attachments/assets/a1b2c3d4-e5f6-7g8h-9i0j-k1l2m3n4o5p6" />
+<img width="953" height="272" alt="Screenshot 2025-12-30 141544" src="https://github.com/user-attachments/assets/6106b6ed-f337-4455-acf9-748f8bad03f5" />
 
 *> **Figure 6:** The "Green" Log. `CACPM095I Change password on remote machine succeeded` confirms the barrier is removed.*
 
@@ -78,7 +79,7 @@ The `pm.log` confirmed that the CPM successfully connected to the target, change
 The account now holds a high-entropy, machine-generated password that is fully managed by the vault.
 
 **PVWA Verification**
-<img width="973" alt="Screenshot 2025-12-30 135750" src="https://github.com/user-attachments/assets/q1w2e3r4-t5y6-u7i8-o9p0-a1s2d3f4g5h6" />
+<img width="436" height="234" alt="Screenshot 2025-12-30 142323" src="https://github.com/user-attachments/assets/6efb204a-567c-4844-bb9e-f3f805c98c87" />
 
 *> **Figure 7:** Definitive Proof. The account `adm_recon` is now fully automated and secure.*
 
